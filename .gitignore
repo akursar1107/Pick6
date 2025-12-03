@@ -17,6 +17,34 @@ htmlcov/
 dist/
 build/
 
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# pyenv
+.python-version
+
 # Node
 node_modules/
 npm-debug.log*
@@ -26,19 +54,30 @@ yarn-error.log*
 .npm
 .eslintcache
 
+# TypeScript
+*.tsbuildinfo
+
 # Environment
 .env
 .env.local
 .env.*.local
 *.env
 !*.env.example
+infra/docker/dev.env
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
 .idea/
 *.swp
 *.swo
 *~
+.DS_Store
+
+# OS files
+Thumbs.db
 .DS_Store
 
 # Database
@@ -52,15 +91,29 @@ logs/
 
 # Docker
 .dockerignore
+docker-data/
 
 # Build
 dist/
 build/
 *.tsbuildinfo
 
+# Frontend build output
+frontend/dist/
+frontend/.vite/
+
+# Root package-lock (if it shouldn't be there)
+/package-lock.json
+
 # Misc
 .cache/
 .parcel-cache/
 .next/
 out/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
 

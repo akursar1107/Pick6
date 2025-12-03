@@ -1,14 +1,12 @@
 """SQLAlchemy base model and metadata"""
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import DeclarativeBase
 
 # Base class for all models
 class Base(DeclarativeBase):
     pass
 
-# Import all models here for Alembic to discover them
-# from app.db.models.user import User
-# from app.db.models.game import Game
-# from app.db.models.pick import Pick
+# Note: Model imports are NOT here to avoid circular imports
+# Models are imported in alembic/env.py for migrations
+# Models are imported in app/db/models/__init__.py for application use
 

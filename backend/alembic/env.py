@@ -7,6 +7,8 @@ from app.db.base import Base
 
 # Import all models here for Alembic to discover them
 from app.db.models.user import User
+from app.db.models.team import Team
+from app.db.models.player import Player
 from app.db.models.game import Game
 from app.db.models.pick import Pick
 
@@ -14,7 +16,16 @@ from app.db.models.pick import Pick
 config = context.config
 
 # Override sqlalchemy.url with settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Convert async connection string to sync for Alembic
+database_url = settings.DATABASE_URL
+if database_url.startswith("postgresql+asyncpg://"):
+    # Replace asyncpg with psycopg2 for synchronous Alembic operations
+    database_url = database_url.replace("postgresql+asyncpg://", "postgresql+psycopg2://")
+elif database_url.startswith("postgresql://"):
+    # Ensure psycopg2 driver is specified
+    database_url = database_url.replace("postgresql://", "postgresql+psycopg2://")
+
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging
 if config.config_file_name is not None:

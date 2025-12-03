@@ -12,6 +12,32 @@ dist
 dist-ssr
 *.local
 
+# Vite build output
+dist/
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs - but keep useful settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

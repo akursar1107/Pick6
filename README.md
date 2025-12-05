@@ -11,6 +11,7 @@ A boutique, self-hosted web application for tracking NFL "First Touchdown" and "
 ## Quick Start
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - Make (optional, for shortcuts)
 
@@ -33,6 +34,14 @@ A boutique, self-hosted web application for tracking NFL "First Touchdown" and "
    # or
    docker compose exec api alembic upgrade head
    ```
+5. Seed development data (optional):
+   ```bash
+   make seed
+   # or seed individually:
+   make seed-teams
+   make seed-players
+   make seed-games
+   ```
 
 ### Available Commands
 
@@ -42,6 +51,10 @@ A boutique, self-hosted web application for tracking NFL "First Touchdown" and "
 - `make shell-backend` - Enter backend container shell
 - `make migrate` - Run database migrations
 - `make migration msg="description"` - Create new migration
+- `make seed` - Seed all development data (teams, players, games)
+- `make seed-teams` - Seed NFL teams only
+- `make seed-players` - Seed sample players only
+- `make seed-games` - Seed sample games only
 
 ## Project Structure
 
@@ -62,4 +75,3 @@ first6/
 ## License
 
 Private project - All rights reserved
-

@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Toaster } from '@/components/ui/toaster'
-import { queryClient } from '@/lib/query-client'
-import { routes } from './routes'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { queryClient } from "@/lib/query-client";
+import { routes } from "./routes";
 
 function App() {
   return (
@@ -16,8 +16,7 @@ function App() {
         <Toaster />
       </BrowserRouter>
     </QueryClientProvider>
-  )
+  );
 }
 
-export default App
-
+export default App;

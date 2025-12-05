@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Commit & Push After Spec",
+  "description": "Automatically commits all changes and pushes to the dev branch after a full spec task list is completed",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "cd First6 && git add -A && git commit -m \"Completed spec task list - auto commit\" && git push origin dev"
+  }
+}

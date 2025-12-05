@@ -1,7 +1,5 @@
-// Placeholder for Shadcn Toaster component
-// Run: npx shadcn-ui@latest add toast
+import { Toaster as Sonner } from "sonner";
 
 export function Toaster() {
-  return null
+  return <Sonner position="top-right" richColors closeButton />;
 }
-

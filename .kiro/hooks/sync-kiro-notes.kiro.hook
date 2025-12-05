@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Sync Kiro Notes to Obsidian",
+  "description": "Automatically copies any notes added to the .kiro directory to the iCloud Obsidian vault at First6 Docs/Kiro",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "C:\\Users\\akurs\\Desktop\\First6\\.kiro\\*"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "copy \"${filePath}\" \"C:\\Users\\akurs\\iCloudDrive\\iCloud~md~obsidian\\Coding notes\\First6 Docs\\Kiro\\\""
+  }
+}

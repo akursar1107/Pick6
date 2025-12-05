@@ -1,4 +1,4 @@
-.PHONY: up down logs shell-backend migrate migration test clean
+.PHONY: up down logs shell-backend migrate migration test clean seed seed-teams seed-players seed-games
 
 # Start everything
 up:
@@ -27,6 +27,21 @@ migrate:
 # Run tests
 test:
 	docker compose exec api pytest
+
+# Seed all data (teams, players, games)
+seed: seed-teams seed-players seed-games
+
+# Seed teams only
+seed-teams:
+	docker compose exec api python scripts/seed_teams.py
+
+# Seed players only
+seed-players:
+	docker compose exec api python scripts/seed_players.py
+
+# Seed games only
+seed-games:
+	docker compose exec api python scripts/seed_games.py
 
 # Clean up containers and volumes
 clean:

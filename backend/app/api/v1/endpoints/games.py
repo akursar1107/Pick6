@@ -7,6 +7,9 @@ from typing import List, Optional
 from app.db.session import get_db
 from app.sports.nfl.schemas import GameResponse, GameCreate
 from app.sports.nfl.services import GameService
+from app.schemas.game import GameWithPickResponse
+from app.services.game_service import GameService as MainGameService
+from app.api.dependencies import get_current_user
 
 router = APIRouter()
 
@@ -21,6 +24,22 @@ async def get_games(
     """Get games with optional filters"""
     game_service = GameService(db)
     games = await game_service.get_games(week=week, season=season, status=status)
+    return games
+
+
+@router.get("/available", response_model=List[GameWithPickResponse])
+async def get_available_games(
+    db: AsyncSession = Depends(get_db),
+    user_id: UUID = Depends(get_current_user),
+):
+    """
+    Get games available for picks (future kickoffs).
+    Includes user's existing picks.
+
+    Requirements: 7.1, 7.2, 7.3, 7.4, 8.1, 8.2
+    """
+    game_service = MainGameService(db)
+    games = await game_service.get_available_games(user_id=user_id)
     return games
 
 

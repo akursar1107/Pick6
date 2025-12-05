@@ -14,3 +14,11 @@ redis==5.0.1
 pytest==7.4.3
 pytest-asyncio==0.21.1
 
+# Sports data ingestion libraries
+nflreadpy
+nba_api
+pybaseball
+nhl-api-py
+# cfbd - DISABLED: Has pydantic v1 dependency conflict with main app (pydantic v2)
+# Install separately in sandbox environment only: pip install cfbd
+# See: backend/sandbox/cfb_sandbox.py for usage

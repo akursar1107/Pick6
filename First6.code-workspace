@@ -1,11 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../../iCloudDrive/iCloud~md~obsidian/First6 Docs"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../../iCloudDrive/iCloud~md~obsidian/Coding notes/First6 Docs"
+    }
+  ],
+  "settings": {}
 }

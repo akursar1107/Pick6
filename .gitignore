@@ -78,6 +78,7 @@ infra/docker/dev.env
 *.swo
 *~
 .DS_Store
+*.code-workspace
 
 # OS files
 Thumbs.db

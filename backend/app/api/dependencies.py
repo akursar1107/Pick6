@@ -15,35 +15,38 @@ async def get_current_user(
     """
     Extract and validate user_id from JWT token.
 
-    Requirements: 9.1, 9.2, 9.3, 9.4
+    Requirements: 3.3, 3.4, 6.2, 6.3
 
     Raises:
-        HTTPException: 401 if token is invalid or missing
+        HTTPException: 401 if token is invalid, expired, or missing
     """
     token = credentials.credentials
     payload = decode_access_token(token)
 
+    # Check if token is invalid or expired
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
+            detail="Invalid authentication token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # Check if token contains user_id in "sub" claim
     user_id = payload.get("sub")
     if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
+            detail="Invalid authentication token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # Validate user_id format
     try:
         return UUID(user_id)
     except (ValueError, TypeError):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
+            detail="Invalid authentication token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

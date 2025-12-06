@@ -74,7 +74,7 @@ def jersey_number_strategy():
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -214,7 +214,7 @@ async def test_property_1_valid_pick_creation(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -335,7 +335,7 @@ async def test_property_2_kickoff_time_enforcement_for_creation(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -490,7 +490,7 @@ async def test_property_12_duplicate_pick_prevention(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -632,7 +632,7 @@ async def test_property_3_user_pick_filtering(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -781,7 +781,7 @@ async def test_property_4_game_pick_filtering(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[
         HealthCheck.function_scoped_fixture,
@@ -970,7 +970,7 @@ async def test_property_5_pick_response_completeness(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[
         HealthCheck.function_scoped_fixture,
@@ -1124,7 +1124,7 @@ async def test_property_6_pick_update_modifies_player(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -1301,7 +1301,7 @@ async def test_property_7_update_timestamp_changes(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -1459,7 +1459,7 @@ async def test_property_8_kickoff_time_enforcement_for_updates(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[
         HealthCheck.function_scoped_fixture,
@@ -1625,7 +1625,7 @@ async def test_property_9_submission_timestamp_invariance(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[
         HealthCheck.function_scoped_fixture,
@@ -1798,7 +1798,7 @@ async def test_property_13_update_does_not_trigger_duplicate_detection(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
@@ -1936,7 +1936,7 @@ async def test_property_10_pick_deletion_removes_record(
 
 @pytest.mark.asyncio
 @settings(
-    max_examples=20,
+    max_examples=35,
     deadline=None,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )

@@ -17,6 +17,9 @@ htmlcov/
 dist/
 build/
 
+# Hypothesis (property-based testing)
+.hypothesis/
+
 # MyPy
 .mypy_cache/
 .dmypy.json

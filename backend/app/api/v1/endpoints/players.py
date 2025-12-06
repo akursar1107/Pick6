@@ -10,6 +10,7 @@ from app.db.models.player import Player
 from app.db.models.team import Team
 from app.schemas.player import PlayerResponse
 from app.services.player_service import PlayerService
+from app.api.dependencies import get_current_user
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ async def search_players(
     q: str = Query(..., description="Search query for player name"),
     limit: int = Query(20, ge=1, le=100, description="Maximum number of results"),
     db: AsyncSession = Depends(get_db),
-    # TODO: Add authentication requirement
+    current_user_id: UUID = Depends(get_current_user),
 ):
     """
     Search for players by name.
@@ -52,7 +53,7 @@ async def search_players(
 async def get_player(
     player_id: UUID,
     db: AsyncSession = Depends(get_db),
-    # TODO: Add authentication requirement
+    current_user_id: UUID = Depends(get_current_user),
 ):
     """
     Get a player by ID.

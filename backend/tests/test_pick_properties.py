@@ -2495,7 +2495,7 @@ async def test_property_23_cross_user_modification_rejected(
 
     # Action: User B attempts to modify User A's pick
     # Create authentication token for User B
-    user_b_token = create_access_token(data={"sub": str(user_b.id)})
+    user_b_token = create_access_token(user_b.id)
 
     client = TestClient(app)
     response = client.patch(
@@ -2655,7 +2655,7 @@ async def test_property_24_cross_user_deletion_rejected(
 
     # Action: User B attempts to delete User A's pick
     # Create authentication token for User B
-    user_b_token = create_access_token(data={"sub": str(user_b.id)})
+    user_b_token = create_access_token(user_b.id)
 
     client = TestClient(app)
     response = client.delete(

@@ -514,16 +514,17 @@ The pick submission feature is fully implemented and tested. All tasks have been
     - Add mobile-friendly navigation
     - _Requirements: 1.1, 2.1, 6.1, 7.1_
 
-- [ ] 11. Add authentication to player endpoints (Optional Enhancement)
+- [x] 11. Add authentication to player endpoints (Optional Enhancement)
 
-  - [ ] 11.1 Add authentication dependency to player search endpoint
+  - [x] 11.1 Add authentication dependency to player search endpoint
 
     - Update `backend/app/api/v1/endpoints/players.py`
     - Add `current_user_id: UUID = Depends(get_current_user)` to search_players endpoint
     - Remove TODO comment
     - _Requirements: 6.1, 6.3, 9.1_
 
-  - [ ] 11.2 Add authentication dependency to get player endpoint
+  - [x] 11.2 Add authentication dependency to get player endpoint
+
     - Add `current_user_id: UUID = Depends(get_current_user)` to get_player endpoint
     - Remove TODO comment
     - _Requirements: 6.2, 9.1_

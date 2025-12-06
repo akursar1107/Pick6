@@ -32,8 +32,14 @@ async def test_user(db_session):
 @pytest_asyncio.fixture
 async def auth_token(test_user):
     """Create authentication token for test user"""
-    token = create_access_token(data={"sub": str(test_user.id)})
+    token = create_access_token(test_user.id)
     return token
+
+
+@pytest_asyncio.fixture
+async def auth_headers(auth_token):
+    """Create authentication headers"""
+    return {"Authorization": f"Bearer {auth_token}"}
 
 
 @pytest_asyncio.fixture
@@ -407,7 +413,7 @@ async def test_validation_and_error_handling(
         await db_session.commit()
         await db_session.refresh(other_user)
 
-        other_token = create_access_token(data={"sub": str(other_user.id)})
+        other_token = create_access_token(other_user.id)
         other_headers = {"Authorization": f"Bearer {other_token}"}
 
         # Test 5: Attempt to update another user's pick (Requirement 9.3)
@@ -449,7 +455,7 @@ async def test_validation_and_error_handling(
 
 
 @pytest.mark.asyncio
-async def test_player_search_functionality(db_session, test_teams):
+async def test_player_search_functionality(db_session, test_teams, auth_headers):
     """
     Test player search functionality
     Requirements: 6.1, 6.2, 6.3, 6.4
@@ -482,7 +488,9 @@ async def test_player_search_functionality(db_session, test_teams):
 
     async with AsyncClient(app=app, base_url="http://test") as client:
         # Test 1: Search by partial name (Requirement 6.1)
-        search_response = await client.get("/api/v1/players/search?q=Patrick")
+        search_response = await client.get(
+            "/api/v1/players/search?q=Patrick", headers=auth_headers
+        )
         assert search_response.status_code == 200
         results = search_response.json()
         assert len(results) >= 1
@@ -496,21 +504,25 @@ async def test_player_search_functionality(db_session, test_teams):
             assert "position" in first_result
 
         # Test 3: Search with empty query (Requirement 6.3)
-        empty_response = await client.get("/api/v1/players/search?q=")
+        empty_response = await client.get(
+            "/api/v1/players/search?q=", headers=auth_headers
+        )
         assert empty_response.status_code == 200
         empty_results = empty_response.json()
         assert len(empty_results) == 0
 
         # Test 4: Search with no matches (Requirement 6.4)
         no_match_response = await client.get(
-            "/api/v1/players/search?q=NonExistentPlayer"
+            "/api/v1/players/search?q=NonExistentPlayer", headers=auth_headers
         )
         assert no_match_response.status_code == 200
         no_match_results = no_match_response.json()
         assert len(no_match_results) == 0
 
         # Test 5: Search returns relevant results
-        travis_response = await client.get("/api/v1/players/search?q=Travis")
+        travis_response = await client.get(
+            "/api/v1/players/search?q=Travis", headers=auth_headers
+        )
         assert travis_response.status_code == 200
         travis_results = travis_response.json()
         assert len(travis_results) >= 1

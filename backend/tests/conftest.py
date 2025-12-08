@@ -91,3 +91,36 @@ async def test_team(db_session):
     await db_session.commit()
     await db_session.refresh(team)
     return team
+
+
+@pytest_asyncio.fixture
+async def redis_client():
+    """Create Redis client for testing"""
+    import redis.asyncio as redis
+
+    # Use Redis test database (db 1 instead of default 0)
+    client = redis.Redis(
+        host=os.getenv("REDIS_HOST", "redis"),
+        port=int(os.getenv("REDIS_PORT", 6379)),
+        db=1,  # Use separate database for tests
+        decode_responses=True,
+    )
+
+    # Clear test database before test
+    await client.flushdb()
+
+    yield client
+
+    # Clear test database after test
+    await client.flushdb()
+    await client.close()
+
+
+@pytest_asyncio.fixture
+async def client(db_session):
+    """Create test HTTP client"""
+    from httpx import AsyncClient
+    from app.main import app
+
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac

@@ -119,7 +119,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center">
       <div className="w-full max-w-md p-8 space-y-8 border rounded-lg shadow-sm">
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-center">First6 Login</h1>

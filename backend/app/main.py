@@ -1,9 +1,47 @@
 """FastAPI application entry point"""
 
+import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.logging_config import setup_logging
 from app.api.v1.api import api_router
+from app.worker.scheduler import get_scheduler, configure_jobs
+
+# Initialize logging
+setup_logging(log_level="INFO" if not settings.DEBUG else "DEBUG")
+
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager for FastAPI application.
+    Handles startup and shutdown events.
+
+    Requirements: 7.1, 7.2, 7.3
+    """
+    # Startup
+    logger.info("Starting First6 API application")
+
+    # Initialize and start scheduler
+    scheduler = get_scheduler()
+    configure_jobs(scheduler)
+    scheduler.start()
+    logger.info("Scheduler started successfully")
+
+    yield
+
+    # Shutdown
+    logger.info("Shutting down First6 API application")
+
+    # Shutdown scheduler
+    if scheduler.running:
+        scheduler.shutdown(wait=True)
+        logger.info("Scheduler shut down successfully")
+
 
 app = FastAPI(
     title="First6 API",
@@ -11,6 +49,7 @@ app = FastAPI(
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # CORS middleware
@@ -34,6 +73,5 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
+    """Basic health check endpoint"""
     return {"status": "healthy"}
-

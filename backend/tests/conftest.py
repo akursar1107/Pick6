@@ -32,13 +32,17 @@ async def test_engine():
         poolclass=NullPool,
     )
 
+    # Drop all tables first to ensure clean state
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
     # Create all tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     yield engine
 
-    # Drop all tables
+    # Drop all tables after test
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 

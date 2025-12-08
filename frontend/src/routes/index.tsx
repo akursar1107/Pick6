@@ -9,6 +9,8 @@ const Leaderboard = lazy(
   () => import("@/features/picks/components/Leaderboard")
 );
 const PicksPage = lazy(() => import("@/features/picks/components/PicksPage"));
+const AdminScoringPage = lazy(() => import("@/pages/AdminScoringPage"));
+const AdminMonitoringPage = lazy(() => import("@/pages/AdminMonitoringPage"));
 
 export const routes: RouteObject[] = [
   {
@@ -28,6 +30,22 @@ export const routes: RouteObject[] = [
     element: (
       <ProtectedRoute>
         <PicksPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/scoring",
+    element: (
+      <ProtectedRoute>
+        <AdminScoringPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/monitoring",
+    element: (
+      <ProtectedRoute>
+        <AdminMonitoringPage />
       </ProtectedRoute>
     ),
   },

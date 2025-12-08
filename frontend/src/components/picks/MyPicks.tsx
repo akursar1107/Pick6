@@ -4,6 +4,12 @@ import { getPicks, deletePick } from "@/lib/api/picks";
 import { PickResponse } from "@/types/pick";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { handleApiError } from "@/lib/errors";
@@ -97,93 +103,128 @@ export function MyPicks({ onEditPick }: MyPicksProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">My Picks</h2>
-      <div className="space-y-3">
-        {picks.map((pick) => (
-          <div
-            key={pick.id}
-            className="p-4 rounded-lg border border-input bg-card"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-              <div className="flex-1 space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-semibold text-sm sm:text-base">
-                    {pick.game?.away_team} @ {pick.game?.home_team}
-                  </span>
-                  <span className="text-xs text-muted-foreground px-2 py-0.5 rounded-full bg-muted">
-                    Week {pick.game?.week_number}
-                  </span>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
-                      pick.status === "pending"
-                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                        : pick.status === "win"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                        : pick.status === "loss"
-                        ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                        : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                    }`}
-                  >
-                    {pick.status.toUpperCase()}
-                  </span>
-                </div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">Player: </span>
-                  <span className="font-medium">
-                    {pick.player?.name} ({pick.player?.team} •{" "}
-                    {pick.player?.position})
-                  </span>
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Kickoff:{" "}
-                  {pick.game?.kickoff_time &&
-                    format(
-                      new Date(pick.game.kickoff_time),
-                      "EEE, MMM d • h:mm a"
+    <TooltipProvider>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">My Picks</h2>
+        <div className="space-y-3">
+          {picks.map((pick) => (
+            <div
+              key={pick.id}
+              className="p-4 rounded-lg border border-input bg-card"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div className="flex-1 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold text-sm sm:text-base">
+                      {pick.game?.away_team} @ {pick.game?.home_team}
+                    </span>
+                    <span className="text-xs text-muted-foreground px-2 py-0.5 rounded-full bg-muted">
+                      Week {pick.game?.week_number}
+                    </span>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full ${
+                        pick.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                          : pick.status === "win"
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          : pick.status === "loss"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                      }`}
+                    >
+                      {pick.status.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">Player: </span>
+                    <span className="font-medium">
+                      {pick.player?.name} ({pick.player?.team} •{" "}
+                      {pick.player?.position})
+                    </span>
+                  </div>
+
+                  {/* Show points breakdown if pick has been scored */}
+                  {pick.scored_at && (
+                    <div className="flex flex-wrap items-center gap-3 mt-2">
+                      <div className="text-sm font-semibold text-primary">
+                        {pick.total_points}{" "}
+                        {pick.total_points === 1 ? "point" : "points"}
+                      </div>
+                      {pick.total_points > 0 && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="text-xs text-muted-foreground cursor-help">
+                              (FTD: {pick.ftd_points} + ATTD: {pick.attd_points}
+                              )
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className="space-y-1">
+                              <div>First TD: {pick.ftd_points} points</div>
+                              <div>Anytime TD: {pick.attd_points} points</div>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="text-xs text-muted-foreground">
+                    Kickoff:{" "}
+                    {pick.game?.kickoff_time &&
+                      format(
+                        new Date(pick.game.kickoff_time),
+                        "EEE, MMM d • h:mm a"
+                      )}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Submitted:{" "}
+                    {format(
+                      new Date(pick.pick_submitted_at),
+                      "MMM d, yyyy • h:mm a"
                     )}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Submitted:{" "}
-                  {format(
-                    new Date(pick.pick_submitted_at),
-                    "MMM d, yyyy • h:mm a"
+                  </div>
+                  {pick.scored_at && (
+                    <div className="text-xs text-muted-foreground">
+                      Scored:{" "}
+                      {format(new Date(pick.scored_at), "MMM d, yyyy • h:mm a")}
+                    </div>
                   )}
                 </div>
-              </div>
-              <div className="flex gap-2 sm:flex-col sm:w-auto w-full">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onEditPick(pick)}
-                  disabled={deleteMutation.isPending}
-                  className="flex-1 sm:flex-none sm:w-20"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant={
-                    deletingPickId === pick.id ? "destructive" : "outline"
-                  }
-                  size="sm"
-                  onClick={() => handleDeleteClick(pick.id)}
-                  disabled={deleteMutation.isPending}
-                  className="flex-1 sm:flex-none sm:w-20"
-                >
-                  {deleteMutation.isPending && (
-                    <Spinner size="sm" className="mr-2" />
-                  )}
-                  {deletingPickId === pick.id
-                    ? "Confirm?"
-                    : deleteMutation.isPending
-                    ? "Deleting..."
-                    : "Delete"}
-                </Button>
+                <div className="flex gap-2 sm:flex-col sm:w-auto w-full">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onEditPick(pick)}
+                    disabled={deleteMutation.isPending}
+                    className="flex-1 sm:flex-none sm:w-20"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant={
+                      deletingPickId === pick.id ? "destructive" : "outline"
+                    }
+                    size="sm"
+                    onClick={() => handleDeleteClick(pick.id)}
+                    disabled={deleteMutation.isPending}
+                    className="flex-1 sm:flex-none sm:w-20"
+                  >
+                    {deleteMutation.isPending && (
+                      <Spinner size="sm" className="mr-2" />
+                    )}
+                    {deletingPickId === pick.id
+                      ? "Confirm?"
+                      : deleteMutation.isPending
+                      ? "Deleting..."
+                      : "Delete"}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

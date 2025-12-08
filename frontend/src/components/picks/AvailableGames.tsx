@@ -87,18 +87,49 @@ export function AvailableGames({
                   <span className="text-xs text-muted-foreground px-2 py-0.5 rounded-full bg-muted">
                     Week {game.week_number}
                   </span>
+                  {/* Show if game has been scored */}
+                  {game.scored_at && (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      SCORED
+                    </span>
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   {format(new Date(game.kickoff_time), "EEE, MMM d • h:mm a")}
                 </div>
                 {game.user_pick && (
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
                     <span className="text-xs font-medium text-primary">
                       Your Pick:
                     </span>
                     <span className="text-sm font-medium">
                       {game.user_pick.player_name}
                     </span>
+                    {/* Show result badge if game is scored */}
+                    {game.scored_at && game.user_pick.status && (
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full ${
+                          game.user_pick.status === "win"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            : game.user_pick.status === "loss"
+                            ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                            : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                        }`}
+                      >
+                        {game.user_pick.status.toUpperCase()}
+                      </span>
+                    )}
+                    {/* Show points earned if game is scored and pick won */}
+                    {game.scored_at &&
+                      game.user_pick.total_points !== undefined &&
+                      game.user_pick.total_points > 0 && (
+                        <span className="text-xs font-semibold text-primary">
+                          +{game.user_pick.total_points}{" "}
+                          {game.user_pick.total_points === 1
+                            ? "point"
+                            : "points"}
+                        </span>
+                      )}
                   </div>
                 )}
               </div>

@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     # API Keys
     BALLDONTLIE_API_KEY: str = ""
 
+    # Email/Alert Configuration (optional)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    FROM_EMAIL: str = "noreply@first6.app"
+    ADMIN_EMAILS: List[str] = []
+
     class Config:
         env_file = ".env"
         case_sensitive = True

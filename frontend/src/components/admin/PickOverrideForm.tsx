@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getPicks } from "@/lib/api/picks";
+import { getAllPicksForAdmin } from "@/lib/api/picks";
 import { overridePickScore } from "@/lib/api/scores";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,10 +26,10 @@ export function PickOverrideForm() {
 
   const queryClient = useQueryClient();
 
-  // Fetch all picks
+  // Fetch all picks (admin endpoint)
   const { data: picks = [], isLoading: picksLoading } = useQuery({
-    queryKey: ["picks", "all"],
-    queryFn: () => getPicks(),
+    queryKey: ["picks", "admin", "all"],
+    queryFn: () => getAllPicksForAdmin(),
   });
 
   // Override mutation

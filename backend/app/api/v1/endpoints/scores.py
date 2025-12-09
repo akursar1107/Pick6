@@ -261,6 +261,28 @@ async def manual_score_game(
         )
 
 
+@router.get("/admin/picks", response_model=list)
+async def get_all_picks_for_admin(
+    db: AsyncSession = Depends(get_db),
+    admin_id: UUID = Depends(get_current_admin),
+):
+    """
+    Get all picks in the system (admin only).
+
+    Returns all picks with complete game and player information for admin override functionality.
+
+    **Authentication Required:** Yes (Bearer token with admin role)
+    **Authorization:** Admin only
+    """
+    from app.services.pick_service import PickService
+    from app.schemas.pick import PickResponse
+
+    pick_service = PickService(db)
+    picks = await pick_service.get_picks()  # Get all picks with relationships
+
+    return picks
+
+
 @router.patch("/pick/{pick_id}/override", response_model=dict)
 async def override_pick_score(
     pick_id: UUID,

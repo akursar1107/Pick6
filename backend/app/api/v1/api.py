@@ -10,6 +10,7 @@ from app.api.v1.endpoints import (
     scores,
     health,
     leaderboard,
+    admin_import,
 )
 from app.sports.nfl import routes as nfl_routes
 
@@ -25,6 +26,9 @@ api_router.include_router(scores.router, prefix="/scores", tags=["scoring"])
 api_router.include_router(health.router, prefix="/health", tags=["health"])
 api_router.include_router(
     leaderboard.router, prefix="/leaderboard", tags=["leaderboard"]
+)
+api_router.include_router(
+    admin_import.router, prefix="/admin/import", tags=["admin-import"]
 )
 # Mount all NFL endpoints under /nfl
 api_router.include_router(nfl_routes.router, prefix="/nfl", tags=["nfl"])

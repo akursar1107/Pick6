@@ -50,6 +50,34 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
+    openapi_tags=[
+        {
+            "name": "admin-import",
+            "description": "Admin endpoints for importing NFL season data from nflreadpy. "
+            "**Authentication Required:** All endpoints require admin user authentication. "
+            "Use these endpoints to import game schedules, scores, and touchdown scorer data.",
+        },
+        {
+            "name": "auth",
+            "description": "Authentication and user management endpoints",
+        },
+        {
+            "name": "games",
+            "description": "Game data and schedule endpoints",
+        },
+        {
+            "name": "picks",
+            "description": "User pick management endpoints",
+        },
+        {
+            "name": "leaderboard",
+            "description": "Scoring and leaderboard endpoints",
+        },
+        {
+            "name": "health",
+            "description": "Health check and system status endpoints",
+        },
+    ],
 )
 
 # CORS middleware

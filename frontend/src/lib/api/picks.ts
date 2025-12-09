@@ -72,3 +72,21 @@ export async function searchPlayers(query: string): Promise<Player[]> {
   });
   return response.data;
 }
+
+/**
+ * Get all picks in the system (admin only)
+ * Used for admin override functionality
+ */
+export async function getAllPicksForAdmin(): Promise<PickResponse[]> {
+  const response = await apiClient.get<PickResponse[]>("/scores/admin/picks");
+  return response.data;
+}
+
+/**
+ * Get all games in the database (admin only)
+ * Used for admin manual scoring functionality
+ */
+export async function getAllGamesForAdmin(): Promise<GameWithPick[]> {
+  const response = await apiClient.get<GameWithPick[]>("/games/admin/all");
+  return response.data;
+}

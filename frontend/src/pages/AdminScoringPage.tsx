@@ -1,11 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAvailableGames, getPicks } from "@/lib/api/picks";
 import { ManualScoringForm } from "@/components/admin/ManualScoringForm";
 import { PickOverrideForm } from "@/components/admin/PickOverrideForm";
+import { ImportDataButton } from "@/components/admin/ImportDataButton";
+import { ImportDataModal } from "@/components/admin/ImportDataModal";
+import { ImportProgressModal } from "@/components/admin/ImportProgressModal";
+import { ImportHistoryList } from "@/components/admin/ImportHistoryList";
 import { Spinner } from "@/components/ui/spinner";
 import { format } from "date-fns";
+import { useStartImport } from "@/hooks/useImport";
+import { ImportConfig, ImportStats } from "@/types/import";
+import { toast } from "sonner";
+import { getImportErrorToastMessage } from "@/lib/import-errors";
 
 export default function AdminScoringPage() {
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
+  const [currentJobId, setCurrentJobId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   // Fetch games for recent scoring activity
   const { data: games = [], isLoading: gamesLoading } = useQuery({
     queryKey: ["games", "available"],
@@ -41,13 +54,49 @@ export default function AdminScoringPage() {
     )
     .slice(0, 10);
 
+  // Import mutation using custom hook
+  const importMutation = useStartImport();
+
+  const handleImportStart = (config: ImportConfig) => {
+    importMutation.mutate(config, {
+      onSuccess: (data) => {
+        setCurrentJobId(data.job_id);
+        setIsImportModalOpen(false);
+        setIsProgressModalOpen(true);
+        toast.success("Import started successfully", {
+          description: `Estimated duration: ${data.estimated_duration_minutes} minutes`,
+        });
+      },
+      onError: (error: any) => {
+        const errorMessage = getImportErrorToastMessage(error);
+        toast.error("Failed to start import", {
+          description: errorMessage,
+          duration: 5000,
+        });
+      },
+    });
+  };
+
+  const handleImportComplete = (stats: ImportStats) => {
+    // Refresh games list
+    queryClient.invalidateQueries({ queryKey: ["games"] });
+    queryClient.invalidateQueries({ queryKey: ["import-history"] });
+
+    toast.success(
+      `Import completed! Created ${stats.games_created} games, updated ${stats.games_updated} games.`
+    );
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Scoring Dashboard</h1>
-        <p className="text-muted-foreground">
-          Manually score games and override pick scores
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Admin Scoring Dashboard</h1>
+          <p className="text-muted-foreground">
+            Manually score games and override pick scores
+          </p>
+        </div>
+        <ImportDataButton onClick={() => setIsImportModalOpen(true)} />
       </div>
 
       {/* Main Forms Grid */}
@@ -150,6 +199,11 @@ export default function AdminScoringPage() {
         </div>
       </div>
 
+      {/* Import History */}
+      <div className="mt-8">
+        <ImportHistoryList limit={5} />
+      </div>
+
       {/* Recently Graded Picks */}
       <div className="mt-8 space-y-4">
         <h2 className="text-xl font-semibold">Recently Graded Picks</h2>
@@ -223,6 +277,22 @@ export default function AdminScoringPage() {
           </div>
         )}
       </div>
+
+      {/* Import Modals */}
+      <ImportDataModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImportStart={handleImportStart}
+      />
+
+      {currentJobId && (
+        <ImportProgressModal
+          jobId={currentJobId}
+          isOpen={isProgressModalOpen}
+          onClose={() => setIsProgressModalOpen(false)}
+          onComplete={handleImportComplete}
+        />
+      )}
     </div>
   );
 }

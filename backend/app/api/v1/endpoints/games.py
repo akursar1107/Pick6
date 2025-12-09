@@ -55,6 +55,33 @@ async def get_game(game_id: UUID, db: AsyncSession = Depends(get_db)):
     return game
 
 
+@router.get("/admin/all", response_model=List[GameResponse])
+async def get_all_games_admin(
+    db: AsyncSession = Depends(get_db),
+    user_id: UUID = Depends(get_current_user),
+):
+    """
+    Get all games in the database (admin only).
+    Used for admin manual scoring functionality.
+    """
+    from app.db.models.user import User
+    from sqlalchemy import select
+
+    # Verify user is admin
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if not user or not user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+
+    game_service = GameService(db)
+    # Get all games without any filters
+    games = await game_service.get_games()
+    return games
+
+
 @router.post("/", response_model=GameResponse, status_code=status.HTTP_201_CREATED)
 async def create_game(
     game_data: GameCreate,

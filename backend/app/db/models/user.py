@@ -3,6 +3,7 @@
 from sqlalchemy import Column, String, Boolean, DateTime, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 import uuid
 from app.db.base import Base
@@ -30,6 +31,9 @@ class User(Base):
     total_score = Column(Integer, default=0, nullable=False)  # Sum of all points
     total_wins = Column(Integer, default=0, nullable=False)  # Count of winning picks
     total_losses = Column(Integer, default=0, nullable=False)  # Count of losing picks
+
+    # Relationships
+    import_jobs = relationship("ImportJob", back_populates="admin_user")
 
     @hybrid_property
     def win_percentage(self) -> float:

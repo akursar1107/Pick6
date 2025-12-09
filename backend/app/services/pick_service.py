@@ -65,8 +65,25 @@ class PickService:
     async def get_picks(
         self, user_id: Optional[UUID] = None, game_id: Optional[UUID] = None
     ) -> List[Pick]:
-        """Get picks with optional filters"""
-        query = select(Pick)
+        """
+        Get picks with optional filters, including related game and player data.
+
+        This method is used by admin endpoints to fetch all picks with complete information.
+        """
+        from sqlalchemy.orm import selectinload
+        from app.db.models.game import Game
+        from app.db.models.player import Player
+
+        # Build query with eager loading of relationships
+        query = (
+            select(Pick)
+            .options(
+                selectinload(Pick.game),
+                selectinload(Pick.player),
+                selectinload(Pick.user),
+            )
+            .order_by(Pick.pick_submitted_at.desc())
+        )
 
         if user_id is not None:
             query = query.where(Pick.user_id == user_id)

@@ -107,6 +107,8 @@ class GameService:
                 "away_team": away_team.name if away_team else "Unknown",
                 "kickoff_time": game.kickoff_time,
                 "week_number": game.week_number,
+                "season": game.season_year,
+                "status": game.status,
                 "user_pick": None,
             }
 

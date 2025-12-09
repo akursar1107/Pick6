@@ -59,6 +59,7 @@ async def db_session(test_engine):
         test_engine,
         class_=AsyncSession,
         expire_on_commit=False,
+        autoflush=False,  # Disable autoflush for better control
     )
 
     async with async_session() as session:
@@ -67,8 +68,17 @@ async def db_session(test_engine):
             yield session
 
         app.dependency_overrides[get_db] = override_get_db
-        yield session
-        app.dependency_overrides.clear()
+
+        try:
+            yield session
+            # Commit any pending changes after test
+            await session.commit()
+        except Exception:
+            # Rollback on error
+            await session.rollback()
+            raise
+        finally:
+            app.dependency_overrides.clear()
 
 
 @pytest_asyncio.fixture

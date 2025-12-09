@@ -58,6 +58,8 @@ class GameWithPickResponse(BaseModel):
     away_team: str
     kickoff_time: datetime
     week_number: int
+    season: int  # Added for admin filtering
+    status: str  # Added for admin visibility
     user_pick: Optional[PickInfo] = None
 
     class Config:

@@ -20,6 +20,7 @@ export interface Game {
   away_team: string;
   kickoff_time: string;
   week_number: number;
+  season: number;
   status: "scheduled" | "in_progress" | "completed" | "suspended";
   // Scoring fields
   first_td_scorer_player_id?: string;

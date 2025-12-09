@@ -6,6 +6,6 @@ from .team import Team
 from .player import Player
 from .game import Game
 from .pick import Pick
+from .import_job import ImportJob, ImportJobStatus
 
-__all__ = ["User", "Team", "Player", "Game", "Pick"]
-
+__all__ = ["User", "Team", "Player", "Game", "Pick", "ImportJob", "ImportJobStatus"]

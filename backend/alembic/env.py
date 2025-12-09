@@ -11,6 +11,7 @@ from app.db.models.team import Team
 from app.db.models.player import Player
 from app.db.models.game import Game
 from app.db.models.pick import Pick
+from app.db.models.import_job import ImportJob
 
 # this is the Alembic Config object
 config = context.config
@@ -20,7 +21,9 @@ config = context.config
 database_url = settings.DATABASE_URL
 if database_url.startswith("postgresql+asyncpg://"):
     # Replace asyncpg with psycopg2 for synchronous Alembic operations
-    database_url = database_url.replace("postgresql+asyncpg://", "postgresql+psycopg2://")
+    database_url = database_url.replace(
+        "postgresql+asyncpg://", "postgresql+psycopg2://"
+    )
 elif database_url.startswith("postgresql://"):
     # Ensure psycopg2 driver is specified
     database_url = database_url.replace("postgresql://", "postgresql+psycopg2://")
@@ -58,9 +61,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
@@ -70,4 +71,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

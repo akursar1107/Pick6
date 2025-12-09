@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAvailableGames, searchPlayers } from "@/lib/api/picks";
+import { getAllGamesForAdmin, searchPlayers } from "@/lib/api/picks";
 import { manualScoreGame } from "@/lib/api/scores";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,10 +24,10 @@ export function ManualScoringForm() {
 
   const queryClient = useQueryClient();
 
-  // Fetch available games
+  // Fetch all games (admin endpoint)
   const { data: games = [], isLoading: gamesLoading } = useQuery({
-    queryKey: ["games", "available"],
-    queryFn: getAvailableGames,
+    queryKey: ["games", "admin", "all"],
+    queryFn: getAllGamesForAdmin,
   });
 
   // Search for first TD scorer
@@ -172,7 +172,7 @@ export function ManualScoringForm() {
                 {games.map((game) => (
                   <option key={game.id} value={game.id}>
                     {game.away_team} @ {game.home_team} - Week{" "}
-                    {game.week_number}
+                    {game.week_number} ({game.season}) - {game.status}
                   </option>
                 ))}
               </select>
